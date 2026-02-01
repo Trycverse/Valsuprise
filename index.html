@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Pookie 💖</title>
+
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  margin:0;
+  height:100vh;
+  font-family:'Arial',sans-serif;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+  position:relative;
+}
+
+.card {
+  background:white;
+  padding:28px 22px;
+  border-radius:22px;
+  width:92%;
+  max-width:380px;
+  box-shadow:0 15px 35px rgba(0,0,0,0.25);
+  animation:fadeIn 0.6s ease;
+  z-index: 2;
+}
+
+h1 { color:#ff4d6d; margin-bottom:10px; }
+p { color:#444; font-size:16px; }
+input {
+  width:85%;
+  padding:14px;
+  font-size:16px;
+  border-radius:14px;
+  border:1px solid #ddd;
+  margin-top:14px;
+  outline:none;
+}
+button {
+  padding:16px 24px;
+  margin:18px 8px 0;
+  font-size:18px;
+  border-radius:30px;
+  border:none;
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+.yes { background:#ff4d6d; color:white; }
+.no { background:#ccc; position:absolute; }
+
+.hidden { display:none; }
+img { width:180px; margin-top:18px; }
+
+@keyframes fadeIn { from { opacity:0; transform:scale(0.95);} to {opacity:1; transform:scale(1);} }
+.loader { font-size:18px; color:#ff4d6d; animation:pulse 1.2s infinite; }
+@keyframes pulse {0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+
+/* Glitter / confetti */
+.confetti {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  top:0;
+  left:0;
+  overflow:hidden;
+  z-index: 1;
+}
+.piece {
+  position:absolute;
+  width:10px;
+  height:10px;
+  background: #FFD700;
+  opacity:0.9;
+  animation:fall linear infinite;
+}
+@keyframes fall {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC TURN ON (FIRST PAGE) -->
+<div class="card" id="musicCard">
+<h1>Hey Pookie 💕</h1>
+<p>Tap below to turn on music 🎵</p>
+<button class="yes" onclick="startMusic()">Turn on Music</button>
+</div>
+
+<!-- LOGIN -->
+<div class="card hidden" id="loginCard">
+<p>Faridah… what nickname did you give me? 👀</p>
+<input type="text" id="nicknameInput" placeholder="Type it here…">
+<br>
+<button class="yes" onclick="checkNickname()">Enter</button>
+<p id="error" style="color:red;"></p>
+</div>
+
+<!-- LOADING -->
+<div class="card hidden" id="loadingCard">
+<h1>Hold on 😌</h1>
+<p class="loader">Loading something special for you…</p>
+</div>
+
+<!-- QUESTION -->
+<div class="card hidden" id="questionCard">
+<h1>Will you be my Valentine? 💘</h1>
+<button class="yes" onclick="sayYes()">YES 💖</button>
+<button class="no" id="noBtn">NO 😏</button>
+</div>
+
+<!-- SUCCESS -->
+<div class="card hidden" id="successCard">
+<h1>YAYYYY 🥰💃</h1>
+<img src="https://media.giphy.com/media/3oKIPwoeGErMmaI43C/giphy.gif">
+</div>
+
+<!-- CONFETTI -->
+<div class="confetti" id="confetti"></div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+<source src="https://files.catbox.moe/5y3xkm.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const correctNickname="chum";
+const music=document.getElementById("bgMusic");
+const musicCard=document.getElementById("musicCard");
+const loginCard=document.getElementById("loginCard");
+const loadingCard=document.getElementById("loadingCard");
+const questionCard=document.getElementById("questionCard");
+const successCard=document.getElementById("successCard");
+const noBtn=document.getElementById("noBtn");
+const confettiContainer=document.getElementById("confetti");
+
+// Step 1: Turn on music → show login
+function startMusic(){
+  music.play().catch(()=>console.log("Music blocked"));
+  musicCard.classList.add("hidden");
+  loginCard.classList.remove("hidden");
+}
+
+// Step 2: Check nickname
+function checkNickname(){
+  const input=document.getElementById("nicknameInput").value.trim();
+  if(input.toLowerCase()===correctNickname){
+    loginCard.classList.add("hidden");
+    loadingCard.classList.remove("hidden");
+    setTimeout(()=>{
+      loadingCard.classList.add("hidden");
+      questionCard.classList.remove("hidden");
+    },2500);
+  }else{
+    document.getElementById("error").innerText="Nope… try again 😌";
+  }
+}
+
+// Step 3: NO button playful move (always on screen)
+noBtn.addEventListener("touchstart",moveNo);
+noBtn.addEventListener("mouseover",moveNo);
+function moveNo(){
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+  const rotate = Math.random()*360-180;
+  noBtn.style.transform = `translate(${x}px, ${y}px) rotate(${rotate}deg)`;
+  noBtn.style.transition = "transform 0.3s ease";
+}
+
+// Step 4: YES button → success GIF + confetti
+function sayYes(){
+  questionCard.classList.add("hidden");
+  successCard.classList.remove("hidden");
+  launchConfetti();
+}
+
+// Confetti function
+function launchConfetti(){
+  for(let i=0;i<100;i++){
+    const piece=document.createElement("div");
+    piece.classList.add("piece");
+    piece.style.left=Math.random()*100+"%";
+    piece.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    piece.style.animationDuration=(Math.random()*2+3)+"s";
+    piece.style.width=(Math.random()*8+5)+"px";
+    piece.style.height=(Math.random()*8+5)+"px";
+    confettiContainer.appendChild(piece);
+    setTimeout(()=>piece.remove(),4000);
+  }
+}
+</script>
+
+</body>
+</html>
