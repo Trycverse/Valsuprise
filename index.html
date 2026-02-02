@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For Pookie 💖</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 28px 22px;
+      border-radius: 22px;
+      width: 92%;
+      max-width: 380px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      animation: fadeIn 0.6s ease;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #444;
+      font-size: 16px;
+    }
+
+    input {
+      width: 85%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 14px;
+      border: 1px solid #ddd;
+      margin-top: 14px;
+      outline: none;
+    }
+
+    button {
+      padding: 14px 22px;
+      margin: 18px 8px 0;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .yes {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    .no {
+      background: #ccc;
+      position: absolute;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    img {
+      width: 180px;
+      margin-top: 18px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .loader {
+      font-size: 18px;
+      color: #ff4d6d;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: .3 }
+      50% { opacity: 1 }
+      100% { opacity: .3 }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="card" id="loginCard">
+    <h1>Hey Pookie 💕</h1>
+    <p>Faridah… what nickname did you give me? 👀</p>
+    <input type="text" id="nicknameInput" placeholder="Type it here…" />
+    <br>
+    <button class="yes" onclick="checkNickname()">Enter</button>
+    <p id="error" style="color:red;"></p>
+  </div>
+
+  <!-- LOADING -->
+  <div class="card hidden" id="loadingCard">
+    <h1>Hold on 😌</h1>
+    <p class="loader">Loading something special for you…</p>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="card hidden" id="questionCard">
+    <h1>Will you be my Valentine? 💘</h1>
+    <button class="yes" onclick="sayYes()">YES 💖</button>
+    <button class="no" id="noBtn">NO 😏</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="card hidden" id="successCard">
+    <h1>YAYYYY 🥰💃</h1>
+
+    <p style="
+      margin-top: 10px;
+      font-size: 16px;
+      color: #ff4d6d;
+      font-weight: 500;
+    ">
+      let me know when you want me to EYP baby🫶🏼
+    </p>
+
+    <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" />
+  </div>
+
+  <!-- MUSIC -->
+  <audio id="bgMusic" loop>
+    <source src="https://files.catbox.moe/1n2c4k.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const correctNickname = "chum";
+    const music = document.getElementById("bgMusic");
+
+    function checkNickname() {
+      const input = document.getElementById("nicknameInput").value.trim();
+      if (input.toLowerCase() === correctNickname) {
+        document.getElementById("loginCard").classList.add("hidden");
+        document.getElementById("loadingCard").classList.remove("hidden");
+
+        setTimeout(() => {
+          document.getElementById("loadingCard").classList.add("hidden");
+          document.getElementById("questionCard").classList.remove("hidden");
+          music.play();
+        }, 2500);
+      } else {
+        document.getElementById("error").innerText = "Nope… try again 😌";
+      }
+    }
+
+    const noBtn = document.getElementById("noBtn");
+
+    noBtn.addEventListener("touchstart", moveNo);
+    noBtn.addEventListener("mouseover", moveNo);
+
+    function moveNo() {
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 80);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    function sayYes() {
+      document.getElementById("questionCard").classList.add("hidden");
+      document.getElementById("successCard").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>
